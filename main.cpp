@@ -10,7 +10,7 @@
 using namespace std;
 
 int main () {
-	ifstream* file = new ifstream ("Graf1.txt");
+	ifstream* file = new ifstream ("Graf2.txt");
 
 	Graph* graph = new Graph ();
 
