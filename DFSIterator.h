@@ -9,6 +9,7 @@ private:
 	Graph* graph;
 	stack <Graph::Vertex*> stack; // zásobník
 	Graph::Vertex* current;
+	bool isEnd;
 public:
 	DFSIterator (Graph* graph); // konstruktor
 	void Reset (); // uloží do zásobníku vrchol grafu s nejnižším èíslem (iterace zaèíná tímto vrcholem)

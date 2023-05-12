@@ -16,9 +16,18 @@ int main () {
 
 	graph->loadGraph (file);
 
+	cout << endl;
+	cout << endl;
+	
+	DFSIterator* depthIterator = new DFSIterator (graph);
+
+	for (depthIterator->Reset (); !depthIterator->IsEnd (); depthIterator->Next ()) {
+		cout << depthIterator->CurrentKey () << endl;
+	}
+
 	/*GraphIterator Iter (G); // vytvoøení iterátoru pro graf G
 	
-	for (Iter.Reset (); !Iter.IsEnd (); Iter.Next ()) {
+	for (Iter.Reset (); !Iter.IsEnd (); Iter.Next ()) { // int i = 0; i < m; i++
 		cout << Iter.CurrentKey (); // zpracování vrcholu
 	}*/
 
@@ -32,8 +41,7 @@ for (
 	Iter.Reset (); // inicializace, reset iterátoru
 	!Iter.IsEnd (); // dotaz na konec prùchodu
 	Iter.Next () // posun na další vrchol
-	)
-	{
-	cout << Iter.CurrentKey (); // zpracování vrcholu
+	) {
+		cout << Iter.CurrentKey (); // zpracování vrcholu
 	}
 */

@@ -61,17 +61,18 @@ void Graph::loadGraph (ifstream* file) {
 	string tmpNum1;
 	string tmpNum2;
 
-	while (getline (*file, tmpNum1, ' ') && getline (*file, tmpNum2)) {
+	while (getline (*file, tmpNum1, ' ') && getline (*file, tmpNum2)) { // ètení øádkù souboru
 		num1 = stoi (tmpNum1); // string to integer
 		num2 = stoi (tmpNum2);
 
 		printf ("num1: %d, num2: %d\n", num1, num2);
 
-		if (findVertex (num1) ==nullptr) insertVertex (num1);
-		if (findVertex (num2)==nullptr) insertVertex (num2);
-		this->createEdge (num1, num2);
+		if (findVertex (num1) == nullptr) insertVertex (num1); // pokud takovı vrchol v grafu ještì není, pøidá ho
+		if (findVertex (num2) == nullptr) insertVertex (num2);
+		this->createEdge (num1, num2); // vytvoøí hranu mezi dvìma vrcholy vıše
 	}
 	cout << endl;
+
 	this->traversal (0);
 }
 
