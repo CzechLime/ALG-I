@@ -4,19 +4,21 @@ DFSIterator::DFSIterator (Graph* graph) { // konstruktor
 	this->graph = graph;
 	this->current = nullptr;
 	this->isEnd = true;
-
-	for (auto vertex : this->graph->vertices) {
-		DyedVertex* dyedVertex = new DyedVertex (vertex);
-	}
 }
 
+/**
+ * This function resets the iterator and sets all vertices to undiscovered;
+ */
 void DFSIterator::Reset () { // uloí do zásobníku vrchol grafu s nejniším èíslem (iterace zaèíná tímto vrcholem)
-	this->current = this->dyedVerticies.front();
-
-	for (auto dyedVertex : this->dyedVerticies) {
-		if (dyedVertex->vertex->id < current->vertex->id) current = dyedVertex;
-		dyedVertex->color = 0; // odbarví vrcholy
+	this->current = this->graph->vertices.front ();
+	
+	for (auto vertex : this->graph->vertices) {
+		if (vertex->id < current->id) current = vertex;
 	}
+
+	// nastaví všechny vrcholy na undiscovered
+	this->discovered.clear ();
+	this->finished.clear ();
 
 	while (!this->stack.empty ()) this->stack.pop (); // vyprázdní zásobník
 
@@ -25,15 +27,18 @@ void DFSIterator::Reset () { // uloí do zásobníku vrchol grafu s nejniším èísl
 	Next ();
 }
 
+/**
+ * This function moves the iterator to the next vertex;
+ */
 void DFSIterator::Next () { // funkce posune aktuální vrchol iterátoru na následující vrchol, metoda otestuje zásobník, jestli je prázdnı
 	this->isEnd = this->stack.empty ();
 
 	if (this->isEnd) {
-		for (auto dyedVertex : this->dyedVerticies) {
-			if (dyedVertex->color == 0) {
-			stack.push (dyedVertex);
-			this->isEnd = false;
-			break;
+		for (auto vertex : this->graph->vertices) {
+			if (!isDiscoverd (vertex) && !isFinished (vertex)) { // pokud je undiscovered
+				stack.push (vertex);
+				this->isEnd = false;
+				break;
 			}
 		}
 	}
@@ -42,25 +47,57 @@ void DFSIterator::Next () { // funkce posune aktuální vrchol iterátoru na násled
 	this->current = stack.top (); // 1. prvek fronty (ten nejstarší)
 	stack.pop (); // odstraní 1. prvek z fronty, zmenší ji i o 1
 
-	current->color = 2; // èerná - zpracován (finished)
+	this->finished.push_back (current); // èerná - zpracován (finished)
 
-	for (auto neighbor : current->vertex->neighbors) { // projde sousedy odstranìného prvku
-		if (neighbor->color == 0) { // bílá - zatím nenalezen (undiscovered)
+	for (auto neighbor : current->neighbors) { // projde sousedy odstranìného prvku
+		if (!isDiscoverd (neighbor) && !isFinished (neighbor)) { // bílá - zatím nenalezen (undiscovered)
 			stack.push (neighbor); // pokud soused ještì nebyl nalezen, dá ho do zásobníku
-			neighbor->color = 1; // oznaèím ho jako nalezenı
+			discovered.push_back (neighbor); // oznaèím ho jako nalezenı
 		}
 	}
 }
 
+/**
+ * This function checks whether the stack is empty and iterating is finished;
+ * @return True if iterating is finished, false if it's not;
+ */
 bool DFSIterator::IsEnd () { // iterace je ukonèena, pokud je zásobník prázdnı a všechny vrcholy byly oznaèeny jako zpracované
 	return this->isEnd;
 }
 
+/**
+ * This function returns a vertex on the top of the stack;
+ * @return Vertex from top of the stack;
+ */
 int DFSIterator::CurrentKey () { // vrací data z vrcholu grafu, kterı je na vrcholu zásobníku
 	return this->current->id;
 }
 
-DFSIterator::DyedVertex::DyedVertex (Graph::Vertex* vertex) {
-	this->vertex = vertex;
-	this->color = 0; // bílá
+/**
+ * This function checks whether the vertex was discovered, e.g. is in the vector of discovered vertices;
+ * @param vertex The vertex to check;
+ * @return True if the vertex was discovered, otherwise false;
+ */
+bool DFSIterator::isDiscoverd (Graph::Vertex* vertex) {
+	for (auto element : this->discovered) {
+		if (element->id == vertex->id) {
+			return true;
+		}
+	}
+	return false;
 }
+
+/**
+ * This function checks whether the vertex was processed, e.g. is in the vector of finished vertices;
+ * @param vertex The vertex to check;
+ * @return True if the vertex was processed, otherwise false;
+ */
+bool DFSIterator::isFinished (Graph::Vertex* vertex) {
+	for (auto element : this->finished) {
+		if (element->id == vertex->id) {
+			return true;
+		}
+	}
+	return false;
+}
+

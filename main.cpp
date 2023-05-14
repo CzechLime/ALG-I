@@ -10,19 +10,26 @@
 using namespace std;
 
 int main () {
-	ifstream* file = new ifstream ("Graf2.txt");
-
-	Graph* graph = new Graph ();
-
-	graph->loadGraph (file);
+	Graph* graph = new Graph ("Graf3.txt");
 
 	cout << endl;
 	cout << endl;
 	
+	cout << "Depth First Iterator: " << endl;
+
 	DFSIterator* depthIterator = new DFSIterator (graph);
 
 	for (depthIterator->Reset (); !depthIterator->IsEnd (); depthIterator->Next ()) {
 		cout << depthIterator->CurrentKey () << endl;
+	}
+
+	cout << endl;
+	cout << "Bread First Iterator: " << endl;
+
+	BFSIterator* breadIterator = new BFSIterator (graph);
+
+	for (breadIterator->Reset (); !breadIterator->IsEnd (); breadIterator->Next ()) {
+		cout << breadIterator->CurrentKey () << endl;
 	}
 
 	/*GraphIterator Iter (G); // vytvoøení iterátoru pro graf G

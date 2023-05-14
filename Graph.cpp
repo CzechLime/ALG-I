@@ -15,6 +15,12 @@ Graph::Vertex* Graph::findVertex (int id) { // najde vrchol podle ID
 	return nullptr;
 }
 
+Graph::Graph (string graphFile) {
+	ifstream* file = new ifstream (graphFile);
+
+	this->loadGraph (file);
+}
+
 void Graph::insertVertex (int id, vector <int> neighborIds) { // vkládá vrchol do grafu
 	Vertex* newVertex = new Vertex (id);
 	vertices.push_back (newVertex); // pøidá vrchol za ostatní
@@ -29,32 +35,10 @@ void Graph::insertVertex (int id, vector <int> neighborIds) { // vkládá vrchol d
 	}
 }
 
-bool Graph::traversal (int id) { // prùchod grafem
-	Vertex* current = vertices.back (); // pointer na první prvek vektoru
-	queue <Vertex*> queue; // vytvoøí frontu vrcholù
-
-	queue.push (current); // pøidá prvek na konec øady, zvìtší její velikost o 1
-	current->color = 1; // šedá - pøijat ke zpracování (discovered)
-
-	while (!queue.empty ()) { // dokud neprojdu celou frontu
-		current = queue.front (); // 1. prvek fronty (ten nejstarší)
-		queue.pop (); // odstraní 1. prvek z fronty, zmenší ji i o 1
-
-		current->color = 2; // èerná - zpracován (finished)
-
-		//if (current->id == id) return true; // pokud byl prvek nalezen, vrací true
-		cout << current->id << endl;
-		for (auto neighbor : current->neighbors) { // projde sousedy odstranìného prvku
-			if (neighbor->color == 0) { // bílá - zatím nenalezen (undiscovered)
-				queue.push (neighbor); // pokud soused ještì nebyl nalezen, dá ho na konec frotny
-				neighbor->color = 1; // oznaèím ho jako nalezený
-			}
-		}
-	}
-
-	return false; // prvek s daným ID nenalezen
-}
-
+/**
+ * This function loads a graph from a text file;
+ * @param file Textfile with the graph;
+ */
 void Graph::loadGraph (ifstream* file) {
 	int num1;
 	int num2;
@@ -73,9 +57,13 @@ void Graph::loadGraph (ifstream* file) {
 	}
 	cout << endl;
 
-	this->traversal (0);
 }
 
+/**
+ * This function creates an edge between two neighboring vertices;
+ * @param from The vertex which will be the edge's origin;
+ * @param to The vertex the edge leads to;
+ */
 void Graph::createEdge (int from, int to) {
 	Vertex* neighbor = findVertex (to); // zkusí, jestli takový soused existuje
 	Vertex* newVertex= findVertex (from);

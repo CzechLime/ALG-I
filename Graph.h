@@ -26,10 +26,11 @@ public:
 
 	vector <Vertex*> vertices; // vrcholy, vektor - vylepšené pole
 
+	Graph (string graphFile);
+
 	void insertVertex (int id); // vložení nenavázaného vrcholu
 	void insertVertex (int id, vector <int> neighborIds); // vložení navázaného vrcholu
 	Vertex* findVertex (int id); // hledání vrcholu podle ID
-	bool traversal (int id); // prùchod grafem
 
 	void loadGraph (ifstream* file);
 	void createEdge (int from, int to);
